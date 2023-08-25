@@ -7,6 +7,7 @@ function Pillar({
   functionType,
   tierDescriptions,
   onTotalPointsUpdate,
+	typeIcon,
 }) {
   return (
     <FormFieldset
@@ -14,6 +15,7 @@ function Pillar({
       advanced={advanced}
       optimal={optimal}
       functionType={functionType}
+			typeIcon={typeIcon}
       tierDescriptions={tierDescriptions}
       onTotalPointsUpdate={onTotalPointsUpdate}
     />

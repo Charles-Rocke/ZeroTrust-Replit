@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
+import Example from "./components/Example";
 import Pillar from "./components/Pillar";
+import { FingerPrintIcon, CircleStackIcon, ChartBarIcon, ArrowTrendingUpIcon, ArrowPathIcon, BuildingLibraryIcon } from '@heroicons/react/24/outline';
 
-// Pillars
 const ZeroTrust = [
 	{
+		// Define the pillar name
 		pillar: "Identity",
 		functions: {
+			// Define tiers of function
 			tiers: ["Traditional", "Advanced", "Optimal"],
 			types: [
+				// Define different identity-related types and their descriptions
 				{
 					typeName: "Authentication",
+					typeIcon: FingerPrintIcon,
 					tierDescriptions: [
+						// Descriptions for different tiers
 						"Agency authenticates identity using either passwords or multi-factor authentication(MFA)",
 						"Agency authenticates identity using MFA",
 						"Agency continuously validates identity, not just when access is initially granted",
@@ -18,6 +24,7 @@ const ZeroTrust = [
 				},
 				{
 					typeName: "Identity Stores",
+					typeIcon: CircleStackIcon,
 					tierDescriptions: [
 						"Agency only uses on-premises identity providers",
 						"Agency federates some identity with cloud and on premises systems",
@@ -26,6 +33,7 @@ const ZeroTrust = [
 				},
 				{
 					typeName: "Risk Assesment",
+					typeIcon: ChartBarIcon,
 					tierDescriptions: [
 						"Agency makes limited determinations for identity risk.",
 						"Agency determines identity risk based on simple analytics and static rules.",
@@ -34,6 +42,7 @@ const ZeroTrust = [
 				},
 				{
 					typeName: "Visibility and Analytics Capability",
+					typeIcon: ArrowTrendingUpIcon,
 					tierDescriptions: [
 						"Agency segments user activity visibility with basic and static attributes.",
 						"Agency aggregates user activity visibility with basic attributes and then analyzes and reports for manual refinement.",
@@ -42,6 +51,7 @@ const ZeroTrust = [
 				},
 				{
 					typeName: "Automation and Orchestration Capability",
+					typeIcon: ArrowPathIcon,
 					tierDescriptions: [
 						"Agency manually adminsters and orchestrates (replicates) identity and credentials",
 						"Agency uses basic automated orchestration to federate identity and permit administration across identity stores",
@@ -50,6 +60,7 @@ const ZeroTrust = [
 				},
 				{
 					typeName: "Governance Capability",
+					typeIcone: BuildingLibraryIcon,
 					tierDescriptions: [
 						"Agency manually audits identities and permissions after initial provisioning using static technical enforcement of credential policies (e.g., complexity, reuse, length, clipping, MFA, etc)",
 						"Agency uses policy-based automated access revocation. There are no shared accounts",
@@ -61,16 +72,20 @@ const ZeroTrust = [
 	},
 ];
 
-// Define the getTierData function
+
+// Define a function to get data for a specific type
 function getTierData(typeName) {
+	// Find the data for the given typeName in ZeroTrust data
 	const typeData = ZeroTrust[0].functions.types.find(
 		(type) => type.typeName === typeName
 	);
 
+	// Handle error or return default value if data not found
 	if (!typeData) {
-		return null; // Handle error or return a default value
+		return null;
 	}
 
+	// Extract relevant data for the type
 	const traditional = ZeroTrust[0].functions.tiers[0];
 	const advanced = ZeroTrust[0].functions.tiers[1];
 	const optimal = ZeroTrust[0].functions.tiers[2];
@@ -86,16 +101,25 @@ function getTierData(typeName) {
 	};
 }
 
+// Main App component
 function App() {
+	// Extract pillar data
 	const pillar = ZeroTrust[0].pillar;
-	const initialFunctionTypes = ZeroTrust[0].functions.types.map((type) => ({
-		...type,
+
+	// Extract tiers and types for improved readability
+	const [traditional, advanced, optimal] = ZeroTrust[0].functions.tiers;
+	const functionTypesData = ZeroTrust[0].functions.types;
+
+	// Initialize functionTypes state with totalPoints property
+	const initialFunctionTypes = functionTypesData.map(() => ({
 		totalPoints: 0,
 	}));
 
+	// State to store function types and their points
 	const [functionTypes, setFunctionTypes] = useState(initialFunctionTypes);
 	const [finalTotalPoints, setFinalTotalPoints] = useState(0);
 
+	// Calculate and update the final total points
 	useEffect(() => {
 		let totalPoints = 0;
 		functionTypes.forEach((type) => {
@@ -104,38 +128,51 @@ function App() {
 		setFinalTotalPoints(totalPoints);
 	}, [functionTypes]);
 
+	console.log(functionTypesData[0].typeIcon)
+
+	// JSX rendering
 	return (
-		<div>
-			<div className="m-5 items-center">
-				<h3 className="text-base font-bold leading-6 text-gray-900">
-					Pillar 1: {pillar}
-				</h3>
-				{functionTypes.map((type, index) => (
-					<div key={index}>
-						<Pillar
-							traditional={ZeroTrust[0].functions.tiers[0]}
-							advanced={ZeroTrust[0].functions.tiers[1]}
-							optimal={ZeroTrust[0].functions.tiers[2]}
-							functionType={type.typeName}
-							tierDescriptions={type.tierDescriptions}
-							totalPoints={type.totalPoints}
-							onTotalPointsUpdate={(points) => {
-								const updatedFunctionTypes = [...functionTypes];
-								updatedFunctionTypes[index].totalPoints = points;
-								setFunctionTypes(updatedFunctionTypes);
-							}}
-						/>
+		<div className="outermost-div">
+			<div className="bg-white py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="mx-auto max-w-2xl lg:text-center">
+						{/* Display pillar information */}
+						<p className="mt-2 text-3xl font-bold tracking-tight text-indigo-600 sm:text-4xl">
+							Pillar 1: {pillar}
+						</p>
 					</div>
-				))}
-				<p className="mt-3 text-lg font-bold">
-					Score for Identity Pillar: {((finalTotalPoints / 36) * 100).toFixed(0)}%
-				</p>
-				<button
-					type="button"
-					className="mt-3 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-				>
-					Get Report
-				</button>
+					{/* Render Pillar component for each function type */}
+					{functionTypes.map((type, index) => (
+						<div key={index}>
+							<Pillar
+								// Pass props to Pillar component
+								traditional={traditional}
+								advanced={advanced}
+								optimal={optimal}
+								functionType={functionTypesData[index].typeName}
+								tierDescriptions={functionTypesData[index].tierDescriptions}
+								typeIcon={functionTypesData[index].typeIcon}
+								totalPoints={type.totalPoints}
+								onTotalPointsUpdate={(points) => {
+									const updatedFunctionTypes = [...functionTypes];
+									updatedFunctionTypes[index].totalPoints = points;
+									setFunctionTypes(updatedFunctionTypes);
+								}}
+							/>
+						</div>
+					))}
+					{/* Display the final score */}
+					<p className="mt-3 text-lg font-bold">
+						Score for Identity Pillar: {((finalTotalPoints / 36) * 100).toFixed(0)}%
+					</p>
+					{/* Button for getting a report */}
+					<button
+						type="button"
+						className="mt-3 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+					>
+						Get Report
+					</button>
+				</div>
 			</div>
 		</div>
 	);

@@ -7,6 +7,7 @@ function FormFieldset({
 	functionType,
 	tierDescriptions,
 	onTotalPointsUpdate,
+	typeIcon,
 }) {
 	// traditional select state
 	const [traditionalSelected, setTraditionalSelected] = useState(false);
@@ -23,13 +24,6 @@ function FormFieldset({
 	// toggle description visibility
 	const [descriptionVisible, setDescriptionVisible] = useState(false);
 
-	// toggle traditional visibility
-	const [traditionalVisible, setTraditionalVisible] = useState(false);
-	// toggle advanced visibility
-	const [advancedVisible, setAdvancedVisible] = useState(false);
-	// toggle optimal visibility
-	const [optimalVisible, setOptimalVisible] = useState(false);
-
 	// function to handle description visiblity
 	function handleDescriptionVisibility() {
 		setDescriptionVisible(!descriptionVisible)
@@ -40,18 +34,38 @@ function FormFieldset({
 	function handleTierSelection(tierName) {
 		// If traditional tier is chosen
 		if (tierName === "traditional") {
-			// Toggle the traditionalSelected state
 			setTraditionalSelected(!traditionalSelected);
+
+			// If Advanced is selected, also select Traditional
+			if (advancedSelected) {
+				setAdvancedSelected(false);
+			}
 		}
 		// If advanced tier is chosen
 		else if (tierName === "advanced") {
-			// Toggle the advancedSelected state
-			setAdvancedSelected(!advancedSelected);
+			// If Traditional is not selected, select both Advanced and Traditional
+			if (!traditionalSelected) {
+				setAdvancedSelected(true);
+				setTraditionalSelected(true);
+			} else {
+				// If Traditional is already selected, toggle Advanced only
+				setAdvancedSelected(!advancedSelected);
+			}
+
+			// If Optimal is selected, also select Traditional and Advanced
+			if (optimalSelected) {
+				setOptimalSelected(false);
+				setTraditionalSelected(true);
+				setAdvancedSelected(true);
+			}
 		}
 		// If optimal tier is chosen
 		else if (tierName === "optimal") {
-			// Toggle the optimalSelected state
 			setOptimalSelected(!optimalSelected);
+
+			// Select all three options
+			setTraditionalSelected(true);
+			setAdvancedSelected(true);
 		}
 	}
 
@@ -77,10 +91,26 @@ function FormFieldset({
 
 	return (
 		<fieldset className="mt-4 border-b border-gray-200">
-			{/* Pillar Type */}
-			<legend className="text-base font-semibold leading-6 text-gray-900">
-				{functionType}
-			</legend>
+			{/* Function Type */}
+			<div className="flex justify-start">
+				<div className="flex">
+					{typeIcon && React.createElement(typeIcon, {
+			className: "mr-3 w-6 h-6 flex-none text-indigo-600"})}
+
+					<legend className="text-base font-semibold leading-6 text-gray-900">
+						{functionType}
+					</legend>
+				</div>
+				<div>
+					<span>
+						<button onClick={() => setDescriptionVisible(!descriptionVisible)}>
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-3 w-6 h-6">
+								<path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+							</svg>
+						</button>
+					</span>
+				</div>
+			</div>
 			{/* Checkbox form Start */}
 			<div className="space-y-5">
 				<div className="relative flex items-start">
@@ -91,28 +121,19 @@ function FormFieldset({
 							aria-describedby="traditional-description"
 							name="traditional"
 							type="checkbox"
-							className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+							className="h-4 w-4 checked:bg-indigo-600 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
 							checked={traditionalSelected}
 							onChange={() => handleTierSelection("traditional")}
 						/>
 					</div>
 					{/* Label */}
 					<div className="ml-3 text-sm leading-6">
-						<div className="flex justify-start">
-							<label htmlFor="traditional" className="font-medium text-gray-900">
-								{traditional}
-							</label>
-							<span>
-								<button onClick={() => setTraditionalVisible(!traditionalVisible)}>
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-3 w-6 h-6">
-										<path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-									</svg>
-								</button>
-							</span>
-						</div>
+						<label htmlFor="traditional" className="font-medium text-gray-900">
+							{traditional}
+						</label>
 						{/* Traditional description */}
 						{/* if user selects to display description */}
-						{traditionalVisible &&
+						{descriptionVisible &&
 							<p id="traditional-description" className="text-gray-500">
 								{tierDescriptions[0]}
 							</p>
@@ -135,21 +156,13 @@ function FormFieldset({
 					</div>
 					{/* label */}
 					<div className="ml-3 text-sm leading-6">
-						<div className="flex justify-start">
-							<label htmlFor="advanced" className="font-medium text-gray-900">
-								{advanced}
-							</label>
-							<span>
-								<button onClick={() => setAdvancedVisible(!advancedVisible)}>
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-3 w-6 h-6">
-										<path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-									</svg>
-								</button>
-							</span>
-						</div>
+						<label htmlFor="advanced" className="font-medium text-gray-900">
+							{advanced}
+						</label>
+
 						{/* Advanced description */}
 						{/* if user selects to display description */}
-						{advancedVisible &&
+						{descriptionVisible &&
 							<p id="advanced-description" className="text-gray-500">
 								{tierDescriptions[1]}
 							</p>
@@ -171,21 +184,13 @@ function FormFieldset({
 					</div>
 					{/* Label */}
 					<div className="ml-3 text-sm leading-6">
-						<div className="flex justify-start">
-							<label htmlFor="optimal" className="font-medium text-gray-900">
-								{optimal}
-							</label>
-							<span>
-								<button onClick={() => setOptimalVisible(!optimalVisible)}>
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="ml-3 w-6 h-6">
-										<path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-									</svg>
-								</button>
-							</span>
-						</div>
+						<label htmlFor="optimal" className="font-medium text-gray-900">
+							{optimal}
+						</label>
+
 						{/* Optimal description */}
 						{/* if user selects to display description */}
-						{optimalVisible &&
+						{descriptionVisible &&
 							<p id="optimal-description" className="text-gray-500">
 								{tierDescriptions[2]}
 							</p>
@@ -194,7 +199,7 @@ function FormFieldset({
 				</div>
 			</div>
 			<p className="hidden">Total Points: {totalPoints}</p>
-		</fieldset>
+		</fieldset >
 	);
 }
 
