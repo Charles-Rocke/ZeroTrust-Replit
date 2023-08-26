@@ -60,7 +60,7 @@ const ZeroTrust = [
 				},
 				{
 					typeName: "Governance Capability",
-					typeIcone: BuildingLibraryIcon,
+					typeIcon: BuildingLibraryIcon,
 					tierDescriptions: [
 						"Agency manually audits identities and permissions after initial provisioning using static technical enforcement of credential policies (e.g., complexity, reuse, length, clipping, MFA, etc)",
 						"Agency uses policy-based automated access revocation. There are no shared accounts",
