@@ -136,7 +136,7 @@ export default function Example() {
 														))}
 													</ul>
 												</li>
-												<li>
+												{/* <li>
 													<div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
 													<ul role="list" className="-mx-2 mt-2 space-y-1">
 														{teams.map((team) => (
@@ -158,15 +158,16 @@ export default function Example() {
 															</li>
 														))}
 													</ul>
-												</li>
+												</li> */}
 												<li className="mt-auto">
-													<a
+													{/* <a
 														href="#"
 														className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
 													>
+														
 														<Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
 														Settings
-													</a>
+													</a> */}
 												</li>
 											</ul>
 										</nav>
