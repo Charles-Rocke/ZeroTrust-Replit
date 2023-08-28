@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Example from "./components/Example";
 import Pillar from "./components/Pillar";
+import CircularProgress from './components/CircularProgress';
+
 import { FingerPrintIcon, CircleStackIcon, ChartBarIcon, ArrowTrendingUpIcon, ArrowPathIcon, BuildingLibraryIcon } from '@heroicons/react/24/outline';
 
 const ZeroTrust = [
@@ -132,47 +134,51 @@ function App() {
 
 	// JSX rendering
 	return (
-		<div className="outermost-div">
-			<div className="bg-white ">
-				<div className="mx-auto max-w-7xl px-6 lg:px-8">
-					<div className="mx-auto max-w-2xl lg:text-center">
-						{/* Display pillar information */}
-						<p className="mt-2 text-3xl font-bold tracking-tight text-indigo-600 sm:text-4xl">
-							Pillar 1: {pillar}
-						</p>
-					</div>
-					{/* Render Pillar component for each function type */}
-					{functionTypes.map((type, index) => (
-						<div key={index}>
-							<Pillar
-								// Pass props to Pillar component
-								traditional={traditional}
-								advanced={advanced}
-								optimal={optimal}
-								functionType={functionTypesData[index].typeName}
-								tierDescriptions={functionTypesData[index].tierDescriptions}
-								typeIcon={functionTypesData[index].typeIcon}
-								totalPoints={type.totalPoints}
-								onTotalPointsUpdate={(points) => {
-									const updatedFunctionTypes = [...functionTypes];
-									updatedFunctionTypes[index].totalPoints = points;
-									setFunctionTypes(updatedFunctionTypes);
-								}}
-							/>
-						</div>
-					))}
-					{/* Display the final score */}
-					<p className="mt-3 text-lg font-bold">
-						Score for Identity Pillar: {((finalTotalPoints / 36) * 100).toFixed(0)}%
+		<div className="outermost-div bg-white flex">
+			<div className="max-w-7xl px-6 lg:px-8">
+				<div className="max-w-2xl lg:text-left">
+					{/* Display pillar information */}
+					<p className="mt-2 text-3xl font-bold tracking-tight text-[#00bceb] sm:text-4xl">
+						Pillar 1: {pillar}
 					</p>
-					{/* Button for getting a report */}
-					<button
-						type="button"
-						className="mt-3 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-					>
-						Get Report
-					</button>
 				</div>
+				{/* Render Pillar component for each function type */}
+				{functionTypes.map((type, index) => (
+					<div key={index}>
+						<Pillar
+							// Pass props to Pillar component
+							traditional={traditional}
+							advanced={advanced}
+							optimal={optimal}
+							functionType={functionTypesData[index].typeName}
+							tierDescriptions={functionTypesData[index].tierDescriptions}
+							typeIcon={functionTypesData[index].typeIcon}
+							totalPoints={type.totalPoints}
+							onTotalPointsUpdate={(points) => {
+								const updatedFunctionTypes = [...functionTypes];
+								updatedFunctionTypes[index].totalPoints = points;
+								setFunctionTypes(updatedFunctionTypes);
+							}}
+						/>
+					</div>
+				))}
+
+				{/* Button for getting a report */}
+				<button
+					type="button"
+					className="mt-3 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+				>
+					Get Report
+				</button>
+			</div>
+			<div className="flex-1 text-center fixed right-0 mr-10">
+				{/* Display the final score */}
+				<p className="mt-3 text-lg font-bold">
+					Score:
+				</p>
+				{/* Display the circular progress component */}
+				<CircularProgress progress={((finalTotalPoints / 36) * 100).toFixed(2)} />
+
 			</div>
 		</div>
 	);
